@@ -10,8 +10,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getIndex(type) {
-        dispatch(actions.getIndex(type));
+    getIndex(type, numItems) {
+        dispatch(actions.getIndex(type, numItems));
     }
 });
 

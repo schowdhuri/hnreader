@@ -9,6 +9,7 @@ import FAIcon from "react-native-vector-icons/FontAwesome";
 import Icon from "react-native-vector-icons/Entypo";
 import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Text } from "react-native";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import * as STORY_TYPES from "../constants/storyTypes";
 
@@ -33,45 +34,53 @@ const ButtonCaption = styled(Text)`
     ${props => props.active ? "color: #ff6600;" : ""}
 `;
 
-export default props => {
-    const { activeTab, onChangeTab } = props;
-    return (<Footer>
-      <FooterTab>
-        <Button onPress={() => onChangeTab(STORY_TYPES.TOP.id)}>
-            <ButtonMCIcon
-                name="fire"
-                active={activeTab === STORY_TYPES.TOP.id}></ButtonMCIcon>
-            <ButtonCaption
-                active={activeTab === STORY_TYPES.TOP.id}>Top</ButtonCaption>
-        </Button>
-        <Button onPress={() => onChangeTab(STORY_TYPES.NEW.id)}>
-            <ButtonIcon
-                name="star-outlined"
-                active={activeTab === STORY_TYPES.NEW.id}></ButtonIcon>
-            <ButtonCaption
-                active={activeTab === STORY_TYPES.NEW.id}>New</ButtonCaption>
-        </Button>
-        <Button onPress={() => onChangeTab(STORY_TYPES.ASK.id)}>
-            <ButtonFAIcon
-                name="question"
-                active={activeTab === STORY_TYPES.ASK.id}></ButtonFAIcon>
-            <ButtonCaption
-                active={activeTab === STORY_TYPES.ASK.id}>Ask</ButtonCaption>
-        </Button>
-        <Button onPress={() => onChangeTab(STORY_TYPES.SHOW.id)}>
-            <ButtonIcon
-                name="emoji-happy"
-                active={activeTab === STORY_TYPES.SHOW.id}></ButtonIcon>
-            <ButtonCaption
-                active={activeTab === STORY_TYPES.SHOW.id}>Show</ButtonCaption>
-        </Button>
-        <Button onPress={() => onChangeTab(STORY_TYPES.JOBS.id)}>
-            <ButtonFAIcon
-                name="briefcase"
-                active={activeTab === STORY_TYPES.JOBS.id}></ButtonFAIcon>
-            <ButtonCaption
-                active={activeTab === STORY_TYPES.JOBS.id}>Jobs</ButtonCaption>
-        </Button>
-      </FooterTab>
-    </Footer>);
-};
+class AppFooter extends React.PureComponent {
+    handleChangeTab = tab => {
+        ReactNativeHapticFeedback.trigger("impactLight", true);
+        this.props.onChangeTab(tab);
+    }
+    render() {
+        const { activeTab } = this.props;
+        return (<Footer>
+          <FooterTab>
+            <Button onPress={() => this.handleChangeTab(STORY_TYPES.TOP.id)}>
+                <ButtonMCIcon
+                    name="fire"
+                    active={activeTab === STORY_TYPES.TOP.id}></ButtonMCIcon>
+                <ButtonCaption
+                    active={activeTab === STORY_TYPES.TOP.id}>Top</ButtonCaption>
+            </Button>
+            <Button onPress={() => this.handleChangeTab(STORY_TYPES.NEW.id)}>
+                <ButtonIcon
+                    name="star-outlined"
+                    active={activeTab === STORY_TYPES.NEW.id}></ButtonIcon>
+                <ButtonCaption
+                    active={activeTab === STORY_TYPES.NEW.id}>New</ButtonCaption>
+            </Button>
+            <Button onPress={() => this.handleChangeTab(STORY_TYPES.ASK.id)}>
+                <ButtonFAIcon
+                    name="question"
+                    active={activeTab === STORY_TYPES.ASK.id}></ButtonFAIcon>
+                <ButtonCaption
+                    active={activeTab === STORY_TYPES.ASK.id}>Ask</ButtonCaption>
+            </Button>
+            <Button onPress={() => this.handleChangeTab(STORY_TYPES.SHOW.id)}>
+                <ButtonIcon
+                    name="emoji-happy"
+                    active={activeTab === STORY_TYPES.SHOW.id}></ButtonIcon>
+                <ButtonCaption
+                    active={activeTab === STORY_TYPES.SHOW.id}>Show</ButtonCaption>
+            </Button>
+            <Button onPress={() => this.handleChangeTab(STORY_TYPES.JOBS.id)}>
+                <ButtonFAIcon
+                    name="briefcase"
+                    active={activeTab === STORY_TYPES.JOBS.id}></ButtonFAIcon>
+                <ButtonCaption
+                    active={activeTab === STORY_TYPES.JOBS.id}>Jobs</ButtonCaption>
+            </Button>
+          </FooterTab>
+        </Footer>);
+    }
+}
+
+export default AppFooter;

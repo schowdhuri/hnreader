@@ -1,43 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { View, Text, TouchableOpacity } from "react-native";
-import { Spinner } from "native-base";
+import { FlatList, View } from "react-native";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
-import hoursAgo from "../utils/hoursAgo";
+import StoryListItem from "./ListItem";
 
 const Wrapper = styled.View`
-    padding: 10px;
-`;
-const Story = styled.View`
-    background: #f2f2f2;
-    border-radius: 2px;
-    margin-bottom: 2px;
-    padding: 10px 15px;
-`;
-const Title = styled.Text``;
-const Summary = styled.View`
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    margin-top: 5px;
-`;
-const Separator = styled.Text`
-    color: #999;
-`;
-const Score = styled.Text`
-    color: #999;
-`;
-const User = styled.Text`
-    color: #999;
-`;
-const TimeAdded = styled.Text`
-    color: #999;
-`;
-const Discuss = styled.Text`
-    color: #999;
+    flex: 1
 `;
 
-class List extends React.Component {
+class StoriesList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -60,29 +32,38 @@ class List extends React.Component {
             this.props.getIndex(this.state.storyType);
     }
     openStory = storyId => {
-        console.log("Open ", storyId)
+        ReactNativeHapticFeedback.trigger("impactLight", true);
         this.props.navigation.navigate("Story", {
             storyId
         });
     }
+    refreshList = () => {
+        if(!this.props.isLoading) {
+            this.props.getIndex(this.state.storyType);
+        }
+    };
+    loadMore = () => {
+        const { isLoading, stories, getIndex } = this.props;
+        if(!isLoading) {
+            getIndex(this.state.storyType, stories.length);
+        }
+    };
+    renderItem = ({ item }) => (
+        <StoryListItem story={item} openStory={this.openStory} />
+    );
     render() {
         const { stories, isLoading } = this.props;
         return <Wrapper>
-            {stories.map(story => <Story key={story.id}>
-                <TouchableOpacity onPress={() => this.openStory(story.id)}>
-                    <Title>{story.title}</Title>
-                    <Summary>
-                        <Score>{story.score} pt</Score>
-                        <Separator>{" | "}</Separator>
-                        <User>{story.by}</User>
-                        <Separator>{" | "}</Separator>
-                        <TimeAdded>{hoursAgo(story.time)}</TimeAdded>
-                    </Summary>
-                </TouchableOpacity>
-            </Story>)}
-            {isLoading ? <Spinner /> : null}
+            <FlatList
+                data={stories}
+                renderItem={this.renderItem}
+                keyExtractor={s => `${s.id}`}
+                refreshing={isLoading}
+                onRefresh={this.refreshList}
+                onEndReached={this.loadMore}
+                onEndReachedThreshold={0.1} />
         </Wrapper>;
     }
 }
 
-export default List;
+export default StoriesList;

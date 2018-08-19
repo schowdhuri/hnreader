@@ -8,7 +8,9 @@ const initialState = {
 export default (state=initialState, action) => {
     switch(action.type) {
         case ACTIONS.GET_INDEX:
-            return initialState;
+            if(!action.num)
+                return initialState;
+            break;
         
         case ACTIONS.GET_INDEX_OK:
             return {
@@ -25,4 +27,5 @@ export default (state=initialState, action) => {
         default:
             return state;
     }
+    return state;
 };

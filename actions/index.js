@@ -6,9 +6,10 @@ export const setLoading = (id, status) => ({
     status
 });
 
-export const getIndex = storyType => ({
+export const getIndex = (storyType, num=0) => ({
     type: ACTIONS.GET_INDEX,
-    storyType
+    storyType,
+    num
 });
 
 export const getIndexSuccess = items => ({

@@ -14,17 +14,18 @@ async function getItem(id) {
     );
     return response.json;
 }
-async function getStories(storyType) {
+async function getStories(storyType, num) {
     const { url } = storyType;
     const storyIds = await request(url);
-    const page = storyIds.json.slice(0, 10);
+    const page = storyIds.json.slice(0, num + 10);
     const pArr = page.map(getItem);
     return await Promise.all(pArr);
 }
 function* getIndex(action) {
+    const { storyType, num } = action;
     yield put(setLoading(GET_INDEX, true));
     try {
-        const stories = yield call(getStories, action.storyType);
+        const stories = yield call(getStories, storyType, num);
         yield put(getIndexSuccess(stories));
     } catch(ex) {
         console.log(ex);
